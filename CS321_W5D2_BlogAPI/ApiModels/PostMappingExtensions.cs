@@ -19,7 +19,10 @@ namespace CS321_W5D2_BlogAPI.ApiModels
                 BlogId = post.BlogId,
                 DatePublished = post.DatePublished,
                 // TODO: map blogName and authorName
-			};
+                //DONE
+                AuthorName = post.Blog.User.FullName,
+                BlogName = post.Blog.Name
+            };
 		}
 
 		public static Post ToDomainModel(this PostModel postModel)

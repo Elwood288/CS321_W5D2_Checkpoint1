@@ -9,12 +9,14 @@ namespace CS321_W5D2_BlogAPI.Core.Services
         private readonly IPostRepository _postRepository;
         private readonly IBlogRepository _blogRepository;
         private readonly IUserService _userService;
+        public static DateTime Now { get; }
 
         public PostService(IPostRepository postRepository, IBlogRepository blogRepository, IUserService userService)
         {
             _postRepository = postRepository;
             _blogRepository = blogRepository;
             _userService = userService;
+
         }
 
         public Post Add(Post newPost)
@@ -22,8 +24,21 @@ namespace CS321_W5D2_BlogAPI.Core.Services
             // TODO: Prevent users from adding to a blog that isn't theirs
             //     Use the _userService to get the current users id.
             //     You may have to retrieve the blog in order to check user id
-            // TODO: assign the current date to DatePublished
-            return _postRepository.Add(newPost);
+            
+            var currentBlog = _blogRepository.Get(newPost.BlogId);
+            DateTime postDate = Now;
+
+            if (_userService.CurrentUserId == currentBlog.UserId)
+            {
+                // TODO: assign the current date to DatePublished
+                //DONE
+                newPost.DatePublished = Now;
+                return _postRepository.Add(newPost);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public Post Get(int id)
@@ -43,15 +58,34 @@ namespace CS321_W5D2_BlogAPI.Core.Services
 
         public void Remove(int id)
         {
-            var post = this.Get(id);
+            Post post = Get(id);
             // TODO: prevent user from deleting from a blog that isn't theirs
-            _postRepository.Remove(id);
+            //DONE
+            var currentBlog = _blogRepository.Get(post.BlogId);
+
+            if (_userService.CurrentUserId == currentBlog.UserId)
+            {
+                _postRepository.Remove(post);
+            }
+           
+            
         }
 
         public Post Update(Post updatedPost)
         {
             // TODO: prevent user from updating a blog that isn't theirs
-            return _postRepository.Update(updatedPost);
+            //DONE
+            var currentBlog = _blogRepository.Get(updatedPost.BlogId);
+
+            if (_userService.CurrentUserId == currentBlog.UserId)
+            {
+                return _postRepository.Update(updatedPost);
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
     }

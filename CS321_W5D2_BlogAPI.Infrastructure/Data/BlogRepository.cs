@@ -14,44 +14,58 @@ namespace CS321_W5D2_BlogAPI.Infrastructure.Data
         public BlogRepository(AppDbContext dbContext) 
         {
             // TODO: inject AppDbContext
+            //DONE
+            _dbContext = dbContext;
         }
 
         public IEnumerable<Blog> GetAll()
         {
             // TODO: Retrieve all blgs. Include Blog.User.
-            throw new NotImplementedException();
+            //DONE
+            return _dbContext.Blogs
+               .Include(a => a.User)
+               .ToList();
         }
 
         public Blog Get(int id)
         {
             // TODO: Retrieve the blog by id. Include Blog.User.
-            throw new NotImplementedException();
+            //DONE
+            return _dbContext.Blogs
+               .Include(a => a.User)
+               .SingleOrDefault(b => b.Id == id);
         }
 
         public Blog Add(Blog blog)
         {
             // TODO: Add new blog
-            throw new NotImplementedException();
+            //DONE
+            _dbContext.Blogs.Add(blog);
+            _dbContext.SaveChanges();
+            return blog;
         }
 
         public Blog Update(Blog updatedItem)
         {
             // TODO: update blog
-            throw new NotImplementedException();
-            //var existingItem = _dbContext.Find(updatedItem.Id);
-            //if (existingItem == null) return null;
-            //_dbContext.Entry(existingItem)
-            //   .CurrentValues
-            //   .SetValues(updatedItem);
-            //_dbContext.Blogs.Update(existingItem);
-            //_dbContext.SaveChanges();
-            //return existingItem;
+            //DONE
+            var currentItem = _dbContext.Blogs.Find(updatedItem.Id);
+            if (currentItem == null) return null;
+            _dbContext.Entry(currentItem)
+                .CurrentValues
+                .SetValues(updatedItem);
+
+            _dbContext.Blogs.Update(currentItem);
+            _dbContext.SaveChanges();
+            return currentItem;
         }
 
-        public void Remove(int id)
+        public void Remove(Blog blog)
         {
             // TODO: remove blog
-            throw new NotImplementedException();
+            //DONE
+            _dbContext.Remove(blog);
+            _dbContext.SaveChanges();
         }
     }
 }

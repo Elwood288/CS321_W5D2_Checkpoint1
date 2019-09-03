@@ -9,6 +9,7 @@ namespace CS321_W5D2_BlogAPI.Core.Services
         private readonly IBlogRepository _blogRepository;
 
         // TODO: inject IBlogRepository
+        //DONE
         public BlogService(IBlogRepository blogRepository)
         {
             _blogRepository = blogRepository;
@@ -31,7 +32,8 @@ namespace CS321_W5D2_BlogAPI.Core.Services
 
         public void Remove(int id)
         {
-            _blogRepository.Remove(id);
+            Blog blog = Get(id);
+            _blogRepository.Remove(blog);
         }
 
         public Blog Update(Blog updatedBlog)
